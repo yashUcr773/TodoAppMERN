@@ -1,7 +1,7 @@
 export function Logout(props: any) {
-    function logoutHandlerLogoutComponent() {
+    function onLogout() {
         localStorage.removeItem('token')
-        props.logoutHandlerLogoutToHeaderLifted('login')
+        props.onLogout('login')
     }
-    return <button onClick={logoutHandlerLogoutComponent}>Logout</button>
+    return (props.showLogoutButton ? <button onClick={onLogout}>Logout</button> : "")
 }

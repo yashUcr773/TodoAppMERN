@@ -3,12 +3,12 @@ import { CONSTANTS } from "../config/Constants.ts"
 
 export function Login(props: any) {
 
-    let [username, setUsername] = useState("")
-    let [password, setPassword] = useState("")
+    let [username, setUsername] = useState("111111111111")
+    let [password, setPassword] = useState("111111111111")
     let [showMessage, setShowMessage] = useState(false)
     let [messageVal, setMessageVal] = useState("")
 
-    async function clickHandler(method: String) {
+    async function clickHandler(method: string) {
         let response = await fetch(CONSTANTS.apiBaseURL + '/' + method, {
             body: JSON.stringify({ username, password }),
             method: "POST",

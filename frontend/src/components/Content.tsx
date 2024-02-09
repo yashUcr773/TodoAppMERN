@@ -2,19 +2,16 @@ import { useState } from "react";
 import { Login } from "./Login";
 import { Todos } from "./Todos";
 
-export function Content() {
+export function Content(props: any) {
 
-    const [section, updateSection] = useState<String>('login')
-
-    function onLogin(sec: String) {
-        updateSection(sec)
+    function onLogin(sec: string) {
+        props.onLogin(sec)
     }
 
-
     return <div className="main-content">
-        {section == 'login' ?
+        {props.section == 'login' ?
             <Login onLogin={onLogin}></Login> :
-            section == 'todos' ?
+            props.section == 'todos' ?
                 <Todos></Todos> :
                 ""
 

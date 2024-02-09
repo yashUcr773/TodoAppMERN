@@ -28,7 +28,9 @@ function validateRequest(req, res, next) {
         res.locals.uniqueID = x.uniqueID;
         next();
     } catch (e) {
-        return res.status(403).json({message: "Invalid token", success:false});
+        return res
+            .status(403)
+            .json({ message: "Invalid token", success: false });
     }
 }
 
@@ -36,13 +38,15 @@ function validateRequest(req, res, next) {
 app.post("/signup", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    console.log('here')
+    console.log("here");
 
-    console.log('username', username, typeof(username))
-    console.log('password', password, typeof(password))
+    console.log("username", username, typeof username);
+    console.log("password", password, typeof password);
 
     if (!inputValidator.USER.safeParse({ username, password }).success) {
-        return res.status(403).json({message: "Invalid User Creds", success:false});
+        return res
+            .status(403)
+            .json({ message: "Invalid User Creds", success: false });
     }
 
     const hashedPassword = hasher(password);
@@ -53,7 +57,9 @@ app.post("/signup", async (req, res) => {
     });
 
     if (user) {
-        return res.status(403).json({message: "User already exists!", success:false});
+        return res
+            .status(403)
+            .json({ message: "User already exists!", success: false });
     }
 
     await db.USER.create({
@@ -66,7 +72,7 @@ app.post("/signup", async (req, res) => {
     return res.status(200).json({
         message: "User created",
         token: "Bearer " + token,
-        success:true
+        success: true,
     });
 });
 
@@ -75,7 +81,9 @@ app.post("/signin", async (req, res) => {
     const password = req.body.password;
 
     if (!inputValidator.USER.safeParse({ username, password }).success) {
-        return res.status(403).json({message: "Invalid User Creds", success:false});
+        return res
+            .status(403)
+            .json({ message: "Invalid User Creds", success: false });
     }
 
     const hashedPassword = hasher(password);
@@ -86,13 +94,16 @@ app.post("/signin", async (req, res) => {
     });
 
     if (!user) {
-        return res.status(404).json({message: "User not found", success:false});
+        return res
+            .status(404)
+            .json({ message: "User not found", success: false });
     }
 
     const token = JWT.sign({ username, uniqueID: user["uniqueID"] }, JWTSecret);
     return res.status(200).json({
         message: "User Signed in",
-        token: "Bearer " + token, success:true
+        token: "Bearer " + token,
+        success: true,
     });
 });
 
@@ -104,7 +115,7 @@ app.get("/todos", validateRequest, async (req, res) => {
         },
         { todos: 1, _id: 0 }
     );
-    res.status(200).json({ todos: todos.todos, success:true });
+    res.status(200).json({ todos: todos.todos, success: true });
 });
 
 app.post("/todos", validateRequest, async (req, res) => {
@@ -117,7 +128,9 @@ app.post("/todos", validateRequest, async (req, res) => {
         !inputValidator.TODO.safeParse({ title, description, completed })
             .success
     ) {
-        return res.status(403).json({message: "invalid todo input", success:false});
+        return res
+            .status(403)
+            .json({ message: "invalid todo input", success: false });
     }
 
     try {
@@ -133,12 +146,19 @@ app.post("/todos", validateRequest, async (req, res) => {
             }
         );
         if (todo.matchedCount == 0) {
-            return res.status(404).json({message: "User Not Found", success:false});
+            return res
+                .status(404)
+                .json({ message: "User Not Found", success: false });
         } else {
-            return res.status(200).json({message: "Todo Created", success:false});
+            return res
+                .status(200)
+                .json({ message: "Todo Created", success: false });
         }
     } catch (error) {
-        res.status(404).json({message: "Some error occured while creating TODO", success:false});
+        res.status(404).json({
+            message: "Some error occured while creating TODO",
+            success: false,
+        });
     }
 });
 
@@ -163,12 +183,14 @@ app.put("/todos/:todoid", validateRequest, async (req, res) => {
         );
 
         if (!updatedUser) {
-            return res.status(404).json({message: "User or Todo Not Found", success:false});
+            return res
+                .status(404)
+                .json({ message: "User or Todo Not Found", success: false });
         }
 
-        res.status(200).json({message: "Todo Updated", success:false});
+        res.status(200).json({ message: "Todo Updated", success: true });
     } catch (e) {
-        res.status(404).json({message: "Todo not Found", success:false});
+        res.status(404).json({ message: "Todo not Found", success: false });
     }
 });
 
